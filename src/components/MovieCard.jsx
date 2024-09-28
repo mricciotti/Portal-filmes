@@ -5,7 +5,7 @@ export default function MovieCard({id , titulo, imagem_destaque}) {
         <div > 
             <h2>{titulo}</h2>
             <img src={imagem_destaque} />
-            <Link to={`/filmes/${id}`}>Saber mais </Link>
+            <Link to={`/filmes/${id}`} className="">Ver detalhes </Link>
         </div>
     )
 
