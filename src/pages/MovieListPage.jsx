@@ -1,76 +1,51 @@
-// import { useState } from "react"
-
-import { useState } from "react"
-
-// export default function MovieListPage(){
-
-//     const [contador, setContador] = useState(0)
-//     const [textoBotao, setTextoBotao] = useState('MATHEUS')
-    
-//     const handleClick = () => {
-//         setContador((prev) => prev +1)
-//         console.log(contador)
-//     }
-//     const handleClick2 = () => {
-//         setContador((prev) => prev -1)
-//         console.log(contador)
-//     }
-//     const handleClick3 = () => {
-//         setContador((prev) => prev *0)
-//         console.log(contador)
-//     }
-//     const handleClick4 = () => {
-//         setTextoBotao(prev => prev == 'MATHEUS' ? "RICCIOTTI": "MATHEUS")
-//     }
-//     return(
-//         <>
-//             <p>{Math.random()}</p><br />
-//             <p>{contador}</p><br />
-//             <button onClick={handleClick}>Aumentar</button><br /><br />
-//             <button onClick={handleClick2}>Diminuir</button><br /><br />
-//             <button onClick={handleClick3}>Zerar</button><br /><br />
-//             <button onClick={handleClick4}>{textoBotao}</button><br />
-//         </>
-//     )
-// }
-
-import movies from "../data/movies.json"
+import { useState, useEffect } from "react"
 import MovieCard from "../components/MovieCard"
-export default function MovieListPage(){
+import movies from "../data/movies.json"
 
-    const [search, setSearch] = useState("")
+export default function MovieListPage() {
+
+    const [ search, setSearch] = useState("")
+    const [ filmes, setFilmes] = useState([])
+
+    useEffect( () => {
+        fetch('https://api.themoviedb.org/3/movie/popular?api_key=7c572a9f5b3ba776080330d23bb76e1e&language=pt-br')
+        .then( data => data.json())
+        .then( res => setFilmes(res.results))
+        .catch( erro => console.log(erro))
+        .finally(() => console.log('FIM'))
+
+    }, [])
+
 
     const handleSearch = (event) => {
         setSearch(event.target.value)
         console.log(search)
     }
-    
-    const filmesFiltrados = movies.filter( filme => filme.titulo.toLowerCase().includes(search.toLowerCase()) )
+
+    const filmesFiltrados = movies.filter(filme => filme.titulo.toLowerCase().includes(search.toLowerCase()))
 
     return (
         <>
-            <h2>Veja o catálogo de filmes completos</h2>
-            <input 
+            <h2>Veja o catálogo completo de filmes</h2>
+            <input
                 className="text-black"
-                type="text" 
-                id="search" 
-                value = {search}
+                type="text"
+                id="search"
+                value={search}
                 onChange={handleSearch}
             />
-            <section className="flex gap-10">
+            <section className=" gap-10" >
                 {
-
-                    filmesFiltrados.length > 0 ?
-                    filmesFiltrados
-                    .map( filme => (
-                        <MovieCard key={filme.id} {...filme}/>
+                    filmes.map(filme => (
+                       <div>
+                         <h1>{filme.title}</h1>
+                         <p>{filme.vote_average}</p>
+                         <img src={`https://image.tmdb.org/t/p/w1280${filme.backdrop_path}`} />
+                         <img src={`https://image.tmdb.org/t/p/w500${filme.poster_path}`} />
+                        </div>
                     ))
-                    :
-                    
-                    <p>FILME NAO ENCONTRADO</p>
-                }   
+                }
             </section>
         </>
-    
-)
+    )
 }
