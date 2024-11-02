@@ -37,12 +37,7 @@ export default function MovieListPage() {
             <section className=" gap-10" >
                 {
                     filmes.map(filme => (
-                       <div>
-                         <h1>{filme.title}</h1>
-                         <p>{filme.vote_average}</p>
-                         <img src={`https://image.tmdb.org/t/p/w1280${filme.backdrop_path}`} />
-                         <img src={`https://image.tmdb.org/t/p/w500${filme.poster_path}`} />
-                        </div>
+                            <MovieCard key={filme.id} {...filme} ></MovieCard>
                     ))
                 }
             </section>
